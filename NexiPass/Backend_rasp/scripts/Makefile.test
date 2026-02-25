@@ -1,0 +1,37 @@
+
+# Cross-compilation toolchain
+CXX = /home/brunoa/buildroot/buildroot-2025.02.6/output/host/bin/aarch64-buildroot-linux-gnu-g++
+
+# Compiler flags
+CXXFLAGS = -std=c++17 -Wall -pthread -O2 -I.
+
+# Linker flags
+LDFLAGS = -lpq -pthread
+
+# Source files (automatic detection)
+SRCS = $(wildcard *.cpp)
+
+# Object files
+OBJS = $(SRCS:.cpp=.o)
+
+# Target executable
+TARGET = nexipass_app
+
+# Default rule
+all: $(TARGET)
+
+# Link executable
+$(TARGET): $(OBJS)
+	$(CXX) $(OBJS) -o $(TARGET) $(LDFLAGS)
+
+# Compile objects
+%.o: %.cpp
+	@echo "Compiling $<"
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Clean build artifacts
+clean:
+	@echo "Cleaning build artifacts"
+	rm -f $(OBJS) $(TARGET)
+
+.PHONY: all clean
